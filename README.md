@@ -13,6 +13,8 @@ hermes-toolkit/
 │   ├── system/         # 系统运维、备份、清理
 │   ├── devtools/       # 开发工具、构建、部署
 │   └── utilities/      # 杂项工具、数据处理
+├── projects/           # 完整项目
+│   └── material-price-tracker/  # 工程材料价格跟踪系统
 ├── docs/               # 文档、使用说明
 └── README.md
 ```

@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# 数据库和数据文件
+*.db
+*.db.bak
+*.json
+!requirements*.json
+
+# 日志
+*.log
+
+# 环境变量和敏感信息
+.env
+.env.*
+mysteel_cookies.json
+
+# 下载的网页（调试用）
+*.html
+
+# 图片（运行时生成）
+*.png
+*.jpg
+*.svg
+
+# 报告文件
+*.txt
+!README.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
