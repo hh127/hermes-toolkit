@@ -1,0 +1,60 @@
+// 导航栏样式
+@import './variables';
+
+.navbar {
+  .logo {
+    height: calc(var(--navbarHeight) - 1.4rem);
+    min-width: calc(var(--navbarHeight) - 1.4rem);
+    margin-right: 0.8rem;
+    vertical-align: top;
+  }
+
+  .site-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--textColor);
+    position: relative;
+  }
+
+  .links {
+    padding-left: 1.5rem;
+    box-sizing: border-box;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    position: absolute;
+    right: 1.5rem;
+    top: 0.7rem;
+    display: flex;
+    align-items: center;
+  }
+}
+
+// 暗色模式
+.theme-mode-dark .navbar {
+  background: var(--mainBg);
+  border-bottom-color: var(--borderColor);
+}
+
+// 响应式
+@media (max-width: 959px) {
+  .navbar .site-name {
+    display: none;
+  }
+}
+
+@media (max-width: 719px) {
+  .navbar {
+    padding-left: 4rem;
+
+    .can-hide {
+      display: none;
+    }
+
+    .site-name {
+      width: calc(100vw - 9.4rem);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}

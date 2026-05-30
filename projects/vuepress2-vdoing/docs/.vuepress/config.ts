@@ -1,6 +1,6 @@
 import { defineUserConfig } from 'vuepress'
 import { viteBundler } from '@vuepress/bundler-vite'
-import { vdoingTheme } from './theme/index'
+import { vdoing2Theme as vdoingTheme } from './theme/index'
 
 const DOMAIN_NAME = 'wiki.mrlining.cn'
 const WEB_SITE = `https://${DOMAIN_NAME}`

@@ -1,0 +1,119 @@
+// 代码样式
+@import './variables';
+
+// 代码块
+div[class*="language-"] {
+  position: relative;
+  margin: 1rem 0;
+  background: var(--codeBgColor);
+  border-radius: 6px;
+  overflow: hidden;
+
+  &::before {
+    content: attr(data-ext);
+    position: absolute;
+    top: 0.5em;
+    right: 1em;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    z-index: 3;
+  }
+
+  pre {
+    margin: 0;
+    padding: 1rem;
+    background: transparent;
+    overflow-x: auto;
+
+    code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #fff;
+    }
+  }
+
+  .line-numbers-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3.5rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.3);
+    padding: 1rem 0;
+    line-height: 1.6;
+    font-size: 0.85rem;
+  }
+
+  &.line-numbers-mode {
+    .line-numbers-wrapper {
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    pre {
+      padding-left: 4.5rem;
+    }
+  }
+}
+
+// 行高亮
+.highlighted-line {
+  background: rgba(255, 255, 255, 0.1);
+  display: block;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+
+// 代码组
+.code-group {
+  margin: 1rem 0;
+
+  .code-group-nav {
+    display: flex;
+    background: var(--codeBgColor);
+    border-radius: 6px 6px 0 0;
+    padding: 0 0.5rem;
+    overflow-x: auto;
+
+    .code-group-nav-item {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+
+      &:hover {
+        color: #fff;
+      }
+
+      &.active {
+        color: var(--accentColor);
+        border-bottom-color: var(--accentColor);
+      }
+    }
+  }
+
+  div[class*="language-"] {
+    border-radius: 0 0 6px 6px;
+    margin: 0;
+  }
+}
+
+// 内联代码
+:not(pre) > code {
+  background: var(--codeBgColorLight);
+  color: var(--accentColor);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.theme-mode-dark {
+  :not(pre) > code {
+    background: var(--codeBgColor);
+  }
+}

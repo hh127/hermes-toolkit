@@ -1,0 +1,18 @@
+// 主样式入口
+@import './variables';
+@import './base';
+@import './layout';
+@import './sidebar';
+@import './navbar';
+@import './page';
+@import './code';
+@import './custom-blocks';
+@import './mobile';
+@import './dark';
+
+// 导出变量供其他文件使用
+:root {
+  --navbarHeight: #{$navbarHeight};
+  --sidebarWidth: #{$sidebarWidth};
+  --contentWidth: #{$contentWidth};
+}

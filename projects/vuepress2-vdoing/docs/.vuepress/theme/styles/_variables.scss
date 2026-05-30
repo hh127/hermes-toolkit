@@ -1,0 +1,82 @@
+// 变量
+$accentColor: #42b983;
+$accentColorLight: lighten($accentColor, 10%);
+$accentColorDark: darken($accentColor, 10%);
+
+$textColor: #2c3e50;
+$textColorLight: #476582;
+$textColorDark: #2c3e50;
+
+$borderColor: #eaecef;
+$borderColorLight: #eaecef;
+$borderColorDark: #4a4a4a;
+
+$codeBgColor: #282c34;
+$codeBgColorLight: #f8f8f8;
+$codeBgColorDark: #1e1e1e;
+
+$mainBg: #fff;
+$mainBgLight: #fff;
+$mainBgDark: #1e1e1e;
+
+$navbarHeight: 3.6rem;
+$sidebarWidth: 20rem;
+$contentWidth: 740px;
+
+$MQNarrow: 959px;
+$MQMobile: 719px;
+$MQMobileNarrow: 419px;
+
+// 暗色模式变量
+.theme-mode-dark {
+  --accentColor: #42b983;
+  --accentColorLight: #42b983;
+  --accentColorDark: #3a9d72;
+
+  --textColor: #adbac7;
+  --textColorLight: #96a7b7;
+  --textColorDark: #cdd9e5;
+
+  --borderColor: #4a4a4a;
+  --borderColorLight: #555;
+  --borderColorDark: #333;
+
+  --codeBgColor: #1e1e1e;
+  --codeBgColorLight: #2d2d2d;
+  --codeBgColorDark: #111;
+
+  --mainBg: #222;
+  --mainBgLight: #333;
+  --mainBgDark: #111;
+}
+
+// 亮色模式变量
+.theme-mode-light,
+:root {
+  --accentColor: #{$accentColor};
+  --accentColorLight: #{$accentColorLight};
+  --accentColorDark: #{$accentColorDark};
+
+  --textColor: #{$textColor};
+  --textColorLight: #{$textColorLight};
+  --textColorDark: #{$textColorDark};
+
+  --borderColor: #{$borderColor};
+  --borderColorLight: #{$borderColorLight};
+  --borderColorDark: #{$borderColorDark};
+
+  --codeBgColor: #{$codeBgColor};
+  --codeBgColorLight: #{$codeBgColorLight};
+  --codeBgColorDark: #{$codeBgColorDark};
+
+  --mainBg: #{$mainBg};
+  --mainBgLight: #{$mainBgLight};
+  --mainBgDark: #{$mainBgDark};
+}
+
+// 导出变量供其他文件使用
+:root {
+  --navbarHeight: #{$navbarHeight};
+  --sidebarWidth: #{$sidebarWidth};
+  --contentWidth: #{$contentWidth};
+}

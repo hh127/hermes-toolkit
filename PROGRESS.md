@@ -1,6 +1,6 @@
 # Hermes Toolkit 开发进度
 
-最后更新: 2026-05-30
+最后更新: 2026-05-30 (vuepress2-vdoing 完整复刻)
 
 ---
 
@@ -23,8 +23,15 @@
 - [x] 18个核心组件
 - [x] 基础样式 (含暗色模式)
 - [x] 构建流程可运行
-- [ ] 完善组件功能
-- [ ] 优化 SCSS deprecation 警告
+- [x] 完整复刻原版 vdoing 主题 (24个组件)
+- [x] SCSS 样式系统 (Stylus → SCSS)
+- [x] Vue 3 Composition API 重构
+- [x] 工具函数 (侧边栏解析/路径/存储)
+- [ ] 自动侧边栏生成 (node_utils)
+- [ ] 自动frontmatter设置
+- [ ] 文章数据聚合 ($sortPosts/$groupPosts)
+- [ ] 卡片容器 (cardList/cardImgList)
+- [ ] 标题徽章 (titleBadge)
 - [ ] 补充内容页面
 
 ---

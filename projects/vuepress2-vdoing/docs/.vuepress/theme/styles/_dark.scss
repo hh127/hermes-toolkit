@@ -1,0 +1,79 @@
+// 暗色模式样式
+@import './variables';
+
+.theme-mode-dark {
+  --accentColor: #42b983;
+  --accentColorLight: #42b983;
+  --accentColorDark: #3a9d72;
+
+  --textColor: #adbac7;
+  --textColorLight: #96a7b7;
+  --textColorDark: #cdd9e5;
+
+  --borderColor: #4a4a4a;
+  --borderColorLight: #555;
+  --borderColorDark: #333;
+
+  --codeBgColor: #1e1e1e;
+  --codeBgColorLight: #2d2d2d;
+  --codeBgColorDark: #111;
+
+  --mainBg: #222;
+  --mainBgLight: #333;
+  --mainBgDark: #111;
+
+  color: var(--textColor);
+  background-color: var(--mainBg);
+
+  .navbar {
+    background: var(--mainBg);
+    border-bottom-color: var(--borderColor);
+  }
+
+  .sidebar {
+    background: var(--mainBg);
+    border-right-color: var(--borderColor);
+  }
+
+  .card-box {
+    background: var(--mainBg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .custom-block {
+    &.tip {
+      background: var(--mainBgLight);
+    }
+
+    &.warning {
+      background: rgba(231, 192, 0, 0.1);
+    }
+
+    &.danger {
+      background: rgba(204, 0, 0, 0.1);
+    }
+
+    &.note {
+      background: rgba(76, 175, 80, 0.1);
+    }
+  }
+
+  // 滚动条
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  // 选中样式
+  ::selection {
+    background: var(--accentColor);
+    color: #fff;
+  }
+}

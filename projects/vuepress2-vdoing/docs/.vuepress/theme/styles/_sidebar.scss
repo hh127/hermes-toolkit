@@ -1,0 +1,115 @@
+// 侧边栏样式
+@import './variables';
+
+.sidebar {
+  .sidebar-links {
+    padding: 1rem 0;
+
+    & > li {
+      &:not(:first-child) {
+        margin-top: 0.5rem;
+      }
+
+      & > a.sidebar-link {
+        font-size: 1em;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .sidebar-link {
+    display: block;
+    padding: 0.4rem 1.5rem;
+    color: var(--textColor);
+    text-decoration: none;
+    font-size: 0.95em;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+      color: var(--accentColor);
+      border-left-color: var(--accentColor);
+    }
+
+    &.active {
+      color: var(--accentColor);
+      border-left-color: var(--accentColor);
+      font-weight: 600;
+    }
+  }
+
+  .sidebar-group {
+    &:not(.first) {
+      margin-top: 0.5rem;
+    }
+
+    .sidebar-heading {
+      color: var(--textColor);
+      font-size: 0.95em;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 1.5rem;
+      margin: 0;
+      width: 100%;
+      box-sizing: border-box;
+      background: transparent;
+      border: none;
+
+      &:hover {
+        color: var(--accentColor);
+      }
+
+      &.open {
+        color: var(--accentColor);
+      }
+
+      .arrow {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border: 6px solid transparent;
+        position: relative;
+
+        &.right {
+          border-left-color: var(--textColor);
+          left: 2px;
+        }
+
+        &.down {
+          border-top-color: var(--textColor);
+          top: 2px;
+        }
+      }
+    }
+
+    .sidebar-group-items {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+      overflow: hidden;
+      transition: height 0.1s ease-out;
+    }
+  }
+}
+
+// 暗色模式
+.theme-mode-dark .sidebar {
+  .sidebar-link {
+    &:hover {
+      color: var(--accentColor);
+    }
+
+    &.active {
+      color: var(--accentColor);
+    }
+  }
+
+  .sidebar-heading {
+    &:hover,
+    &.open {
+      color: var(--accentColor);
+    }
+  }
+}

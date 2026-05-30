@@ -1,0 +1,113 @@
+// 自定义块样式
+@import './variables';
+
+// 提示块
+.custom-block.tip {
+  background: var(--mainBgLight);
+  border-left: 4px solid var(--accentColor);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+
+  .custom-block-title {
+    font-weight: 600;
+    color: var(--accentColor);
+    margin-bottom: 0.5rem;
+  }
+}
+
+// 警告块
+.custom-block.warning {
+  background: #fff7e6;
+  border-left: 4px solid #e7c000;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+
+  .custom-block-title {
+    font-weight: 600;
+    color: #e7c000;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// 危险块
+.custom-block.danger {
+  background: #ffe6e6;
+  border-left: 4px solid #cc0000;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+
+  .custom-block-title {
+    font-weight: 600;
+    color: #cc0000;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// 详情块
+.custom-block.details {
+  background: var(--mainBgLight);
+  border: 1px solid var(--borderColor);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+
+  summary {
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--textColor);
+  }
+}
+
+// 笔记块
+.custom-block.note {
+  background: #e8f5e9;
+  border-left: 4px solid #4caf50;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+
+  .custom-block-title {
+    font-weight: 600;
+    color: #4caf50;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// 定理块
+.custom-block.theorem {
+  background: var(--mainBgLight);
+  border-left: 4px solid #9c27b0;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+
+  .title {
+    font-weight: 600;
+    color: #9c27b0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// 居中容器
+.center-container {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+// 暗色模式
+.theme-mode-dark {
+  .custom-block.warning {
+    background: rgba(231, 192, 0, 0.1);
+  }
+
+  .custom-block.danger {
+    background: rgba(204, 0, 0, 0.1);
+  }
+
+  .custom-block.note {
+    background: rgba(76, 175, 80, 0.1);
+  }
+}
