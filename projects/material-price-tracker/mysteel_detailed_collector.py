@@ -237,7 +237,7 @@ def save_detailed_prices(prices):
         
         success = insert_price(
             category_id=cat_id,
-            material_name=f"{p['name']} (我的钢铁网)",
+            material_name=p['name'],
             price=p['price'],
             specification=p.get('spec', ''),
             brand=p.get('brand', ''),

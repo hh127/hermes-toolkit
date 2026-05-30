@@ -60,6 +60,11 @@ PRICE_SOURCES = {
         'category': '钢筋',
         'unit': '元/吨',
     },
+    '带钢': {
+        'url': 'https://list1.mysteel.com/market/p-223-----010103-0--------1.html',
+        'category': '钢筋',
+        'unit': '元/吨',
+    },
     
     # 型材
     'H型钢': {
@@ -96,6 +101,16 @@ PRICE_SOURCES = {
     },
     '镀锌管': {
         'url': 'https://list1.mysteel.com/market/p-238-----01010903-0--------1.html',
+        'category': '管材',
+        'unit': '元/吨',
+    },
+    '螺旋管': {
+        'url': 'https://list1.mysteel.com/market/p-239-----01010904-0--------1.html',
+        'category': '管材',
+        'unit': '元/吨',
+    },
+    '方矩管': {
+        'url': 'https://list1.mysteel.com/market/p-240-----01010905-0--------1.html',
         'category': '管材',
         'unit': '元/吨',
     },
@@ -153,6 +168,23 @@ PRICE_SOURCES = {
     '混凝土': {
         'url': 'https://list1.mysteel.com/market/p-219-----01011006-0--------1.html',
         'category': '混凝土',
+        'unit': '元/立方米',
+    },
+    
+    # 建筑材料新增
+    '砂石': {
+        'url': 'https://list1.mysteel.com/market/p-219-----01011004-0--------1.html',
+        'category': '砂石',
+        'unit': '元/吨',
+    },
+    '玻璃': {
+        'url': 'https://list1.mysteel.com/market/p-219-----01011002-0--------1.html',
+        'category': '玻璃',
+        'unit': '元/平方米',
+    },
+    '木材': {
+        'url': 'https://list1.mysteel.com/market/p-219-----01011007-0--------1.html',
+        'category': '木材',
         'unit': '元/立方米',
     },
 }
@@ -422,7 +454,7 @@ class MysteelSmartCollector:
                         
                         prices.append({
                             'material_type': name,
-                            'material_name': f'{name} (我的钢铁网)',
+                            'material_name': name,
                             'specification': '',
                             'brand': '',
                             'price': price,

@@ -1,0 +1,75 @@
+// 代码块样式
+
+div[class*='language-'] {
+  position: relative;
+  margin: 1rem 0;
+  background: #282c34;
+  border-radius: 6px;
+  overflow: hidden;
+
+  pre {
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    line-height: 1.6;
+
+    code {
+      padding: 0;
+      background: transparent;
+      color: #abb2bf;
+      font-size: 0.85rem;
+    }
+  }
+
+  // 行号
+  &.line-numbers-mode {
+    .line-numbers {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3rem;
+      padding: 1.25rem 0;
+      text-align: center;
+      color: #636d83;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      border-right: 1px solid #3e4451;
+      user-select: none;
+    }
+
+    pre {
+      padding-left: 4.5rem;
+    }
+  }
+
+  // 复制按钮
+  .copy-code-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    color: #636d83;
+    background: transparent;
+    border: 1px solid #3e4451;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #abb2bf;
+      border-color: #abb2bf;
+    }
+  }
+
+  // 语言标签
+  &::before {
+    content: attr(data-ext);
+    position: absolute;
+    top: 0.5rem;
+    right: 3.5rem;
+    font-size: 0.75rem;
+    color: #636d83;
+    text-transform: uppercase;
+  }
+}

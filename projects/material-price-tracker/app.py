@@ -34,7 +34,8 @@ from report_engine import (
 )
 from source_manager import (
     load_sources, save_sources, add_source, update_source, delete_source,
-    toggle_source, get_source_stats, get_materials_by_source, get_prices_by_source
+    toggle_source, get_source_stats, get_materials_by_source, get_prices_by_source,
+    get_cities, get_city_price_summary
 )
 from mysteel_collector import MysteelCollector, collect_mysteel
 from mysteel_auto_collect import extract_prices_from_homepage, save_to_database
@@ -71,17 +72,31 @@ def api_categories():
 
 @app.route('/api/latest')
 def api_latest_prices():
-    """获取最新价格（支持来源筛选）"""
+    """获取最新价格（支持来源、分类、城市筛选）"""
     category = request.args.get('category')
     city = request.args.get('city')
     source = request.args.get('source')
     
-    prices = get_prices_by_source(source, category)
+    prices = get_prices_by_source(source, category, city)
     
     return jsonify({
         'success': True,
         'data': prices,
         'count': len(prices)
+    })
+
+
+@app.route('/api/cities')
+def api_cities():
+    """获取所有城市列表"""
+    cities = get_cities()
+    
+    # 添加"全国"选项
+    city_list = ['全国'] + cities
+    
+    return jsonify({
+        'success': True,
+        'data': city_list
     })
 
 

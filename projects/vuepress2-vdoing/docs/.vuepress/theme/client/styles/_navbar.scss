@@ -1,0 +1,70 @@
+// 导航栏样式
+
+.navbar {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $navbarHeight;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--c-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .navbar-brand {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--c-text);
+    text-decoration: none;
+    margin-right: 2rem;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .navbar-logo {
+    height: 1.8rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    a {
+      color: var(--c-text-lighter);
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover,
+      &.active {
+        color: var(--c-brand);
+        text-decoration: none;
+      }
+    }
+  }
+
+  .navbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .sidebar-button {
+    display: none;
+    cursor: pointer;
+    padding: 0.5rem;
+
+    @media (max-width: $MQNarrow) {
+      display: block;
+    }
+  }
+}

@@ -107,7 +107,7 @@ def save_to_database(prices):
         
         success = insert_price(
             category_id=category_id,
-            material_name=f'{name} (我的钢铁网)',
+            material_name=name,
             price=price,
             specification='',
             brand='',

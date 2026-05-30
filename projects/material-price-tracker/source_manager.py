@@ -210,8 +210,8 @@ def get_materials_by_source(source_name: str = None) -> List[Dict]:
     return materials
 
 
-def get_prices_by_source(source_name: str = None, category: str = None) -> List[Dict]:
-    """根据数据来源获取价格列表"""
+def get_prices_by_source(source_name: str = None, category: str = None, city: str = None) -> List[Dict]:
+    """根据数据来源获取价格列表，支持城市筛选"""
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -231,9 +231,81 @@ def get_prices_by_source(source_name: str = None, category: str = None) -> List[
         query += " AND c.name = ?"
         params.append(category)
     
+    if city:
+        query += " AND p.city = ?"
+        params.append(city)
+    
     query += " ORDER BY c.name, p.material_name"
     
     cursor.execute(query, params)
+    prices = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    
+    return prices
+
+
+def get_cities() -> List[str]:
+    """获取所有城市列表"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        SELECT DISTINCT city 
+        FROM material_prices 
+        WHERE city IS NOT NULL AND city != ''
+        ORDER BY city
+    """)
+    
+    cities = [row['city'] for row in cursor.fetchall()]
+    conn.close()
+    
+    return cities
+
+
+def get_city_price_summary(city: str = None) -> List[Dict]:
+    """获取城市价格汇总"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    if city and city != '全国':
+        # 获取指定城市的最新价格
+        cursor.execute("""
+            SELECT 
+                c.name as category_name,
+                p.material_name,
+                p.price,
+                p.specification,
+                p.brand,
+                p.city,
+                p.source,
+                p.collect_date,
+                c.unit
+            FROM material_prices p
+            JOIN material_categories c ON p.category_id = c.id
+            WHERE p.city = ?
+            AND p.collect_date = (SELECT MAX(collect_date) FROM material_prices WHERE city = ?)
+            ORDER BY c.name, p.material_name
+        """, (city, city))
+    else:
+        # 获取全国汇总（首页数据）
+        cursor.execute("""
+            SELECT 
+                c.name as category_name,
+                p.material_name,
+                p.price,
+                p.specification,
+                p.brand,
+                p.city,
+                p.source,
+                p.collect_date,
+                c.unit
+            FROM material_prices p
+            JOIN material_categories c ON p.category_id = c.id
+            WHERE p.collect_date = (SELECT MAX(collect_date) FROM material_prices)
+            AND (p.city = '全国' OR p.city IS NULL OR p.city = '')
+            ORDER BY c.name, p.material_name
+        """)
+    
     prices = [dict(row) for row in cursor.fetchall()]
     conn.close()
     

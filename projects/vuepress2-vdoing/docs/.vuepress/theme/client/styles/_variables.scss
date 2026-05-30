@@ -1,0 +1,46 @@
+// Vdoing 主题变量
+
+// 品牌色
+$accentColor: #11a8cd;
+$accentColorLight: lighten($accentColor, 10%);
+$accentColorDark: darken($accentColor, 10%);
+
+// 文本颜色
+$textColor: #2c3e50;
+$textColorLight: #476582;
+$textColorLighter: #90a4ae;
+$textColorLightest: #b0bec5;
+
+// 背景色
+$bgColor: #ffffff;
+$bgColorLight: #f5f5f5;
+$bgColorLighter: #fafafa;
+
+// 边框
+$borderColor: #eaecef;
+$borderColorLight: #f0f0f0;
+
+// 布局
+$navbarHeight: 3.6rem;
+$sidebarWidth: 220px;
+$contentWidth: 800px;
+
+// 断点
+$MQNarrow: 959px;
+$MQMobile: 719px;
+$MQMobileNarrow: 419px;
+
+// CSS 变量（用于运行时切换）
+:root {
+  --c-brand: #{$accentColor};
+  --c-brand-light: #{$accentColorLight};
+  --c-text: #{$textColor};
+  --c-text-light: #{$textColorLight};
+  --c-text-lighter: #{$textColorLighter};
+  --c-text-lightest: #{$textColorLightest};
+  --c-bg: #{$bgColor};
+  --c-bg-light: #{$bgColorLight};
+  --c-bg-lighter: #{$bgColorLighter};
+  --c-border: #{$borderColor};
+  --c-border-light: #{$borderColorLight};
+}

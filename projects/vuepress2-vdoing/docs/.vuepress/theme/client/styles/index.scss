@@ -1,0 +1,18 @@
+// Vdoing 主题全局样式 - VuePress 2.x 版本
+// 从 Stylus 迁移到 SCSS
+
+// 导入变量
+@import './variables';
+
+// 导入各模块
+@import './base';
+@import './layout';
+@import './sidebar';
+@import './navbar';
+@import './page';
+@import './code';
+@import './custom-blocks';
+@import './mobile';
+
+// 暗色模式
+@import './dark';
