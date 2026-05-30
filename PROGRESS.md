@@ -27,9 +27,9 @@
 - [x] SCSS 样式系统 (Stylus → SCSS)
 - [x] Vue 3 Composition API 重构
 - [x] 工具函数 (侧边栏解析/路径/存储)
-- [ ] 自动侧边栏生成 (node_utils)
-- [ ] 自动frontmatter设置
-- [ ] 文章数据聚合 ($sortPosts/$groupPosts)
+- [x] 自动侧边栏生成 (node/sidebar.ts)
+- [x] 自动frontmatter设置 (node/frontmatter.ts)
+- [x] 文章数据聚合 (composables/usePosts.ts)
 - [ ] 卡片容器 (cardList/cardImgList)
 - [ ] 标题徽章 (titleBadge)
 - [ ] 补充内容页面
