@@ -10,8 +10,9 @@
 
           <h1 v-if="showTitle">
             <img
-              v-if="titleBadgeSrc"
+              v-if="titleBadgeSrc && themeConfig.titleBadge !== false"
               :src="titleBadgeSrc"
+              class="title-badge"
             />{{ page.title }}<span
               class="title-tag"
               v-if="frontmatter.titleTag"
@@ -30,6 +31,7 @@
 
       <UpdateArticle
         :length="3"
+        :posts="sortPostsData"
         v-if="isShowUpdateBar"
       />
     </main>
@@ -39,6 +41,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { usePageData, usePageFrontmatter, useSiteData } from 'vuepress/client'
+import { usePosts } from '../composables/usePosts'
+import { useTitleBadge } from '../composables/useTitleBadge'
 
 import PageEdit from './PageEdit.vue'
 import PageNav from './PageNav.vue'
@@ -53,6 +57,12 @@ const props = defineProps<{
 const page = usePageData()
 const frontmatter = usePageFrontmatter()
 const site = useSiteData()
+
+// 使用文章数据 composable
+const { sortPosts: sortPostsData } = usePosts()
+
+// 使用标题徽章 composable
+const { currentBadge: titleBadgeSrc } = useTitleBadge()
 
 const themeConfig = computed(() => site.value?.themeConfig || {})
 
@@ -83,11 +93,6 @@ const showRightMenu = computed(() => {
 const isArticle = computed(() => {
   return frontmatter.value.article !== false
 })
-
-const titleBadgeSrc = computed(() => {
-  if (themeConfig.value.titleBadge === false) return null
-  return null
-})
 </script>
 
 <style lang="scss">
@@ -110,6 +115,14 @@ const titleBadgeSrc = computed(() => {
   }
 
   h1 {
+    .title-badge {
+      margin-bottom: -0.2rem;
+      margin-right: 0.2rem;
+      max-width: 2.2rem;
+      max-height: 2.2rem;
+      vertical-align: middle;
+    }
+
     .title-tag {
       height: 1.5rem;
       line-height: 1.5rem;
@@ -121,13 +134,6 @@ const titleBadgeSrc = computed(() => {
       margin-left: 0.5rem;
       transform: translate(0, -0.25rem);
       display: inline-block;
-    }
-
-    img {
-      margin-bottom: -0.2rem;
-      margin-right: 0.2rem;
-      max-width: 2.2rem;
-      max-height: 2.2rem;
     }
   }
 

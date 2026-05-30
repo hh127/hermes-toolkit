@@ -121,6 +121,13 @@ export const vdoing2Theme = (options: Record<string, any> = {}): Theme => {
 
       // 主题配置
       themeConfig,
+
+      // Markdown 扩展
+      extendsMarkdown: (md) => {
+        // 注册卡片容器插件
+        const { cardListPlugin } = require('./plugins/cardList')
+        md.use(cardListPlugin)
+      },
     }
   }
 }
