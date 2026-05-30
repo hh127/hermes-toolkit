@@ -1,5 +1,5 @@
 <template>
-  <div class="update-article card-box" v-if="posts.length">
+  <div class="update-article card-box" v-if="displayPosts.length">
     <h4 class="title">最近更新</h4>
     <div class="article-list">
       <div
@@ -7,7 +7,7 @@
         v-for="(item, index) in displayPosts"
         :key="index"
       >
-        <span class="date">{{ item.date }}</span>
+        <span class="date">{{ item.frontmatter?.date?.split(' ')[0] || '' }}</span>
         <RouterLink
           :to="item.path"
           class="title"
@@ -23,28 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
-import { useSiteData } from 'vuepress/client'
+import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
   length?: number
   moreArticle?: string
+  posts?: any[]
 }>(), {
   length: 5,
-  moreArticle: ''
+  moreArticle: '',
+  posts: () => []
 })
-
-const site = useSiteData()
-
-const posts = ref<any[]>([])
 
 const displayPosts = computed(() => {
-  return posts.value.slice(0, props.length)
-})
-
-onMounted(() => {
-  // 需要从实际数据获取最近更新的文章
-  posts.value = []
+  return (props.posts || []).slice(0, props.length)
 })
 </script>
 

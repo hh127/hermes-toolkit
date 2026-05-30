@@ -2,7 +2,7 @@
   <div class="post-list" ref="postListRef">
     <div
       class="post card-box"
-      :class="{ 'iconfont icon-zhiding': item.frontmatter.sticky }"
+      :class="{ 'iconfont icon-zhiding': item.frontmatter?.sticky }"
       v-for="item in displayPosts"
       :key="item.key"
     >
@@ -12,20 +12,33 @@
             {{ item.title }}
             <span
               class="title-tag"
-              v-if="item.frontmatter.titleTag"
+              v-if="item.frontmatter?.titleTag"
             >{{ item.frontmatter.titleTag }}</span>
           </RouterLink>
         </h2>
         <div class="article-info">
+          <a
+            title="作者"
+            class="iconfont icon-touxiang"
+            target="_blank"
+            v-if="item.author?.href"
+            :href="item.author.href"
+          >{{ item.author?.name || item.author }}</a>
+          <span
+            title="作者"
+            class="iconfont icon-touxiang"
+            v-else-if="item.author"
+          >{{ item.author?.name || item.author }}</span>
+
           <span
             title="创建时间"
             class="iconfont icon-riqi"
-            v-if="item.frontmatter.date"
+            v-if="item.frontmatter?.date"
           >{{ item.frontmatter.date.split(' ')[0] }}</span>
           <span
             title="分类"
             class="iconfont icon-wenjian"
-            v-if="themeConfig.category !== false && item.frontmatter.categories"
+            v-if="themeConfig.category !== false && item.frontmatter?.categories"
           >
             <RouterLink
               :to="`/categories/?category=${encodeURIComponent(c)}`"
@@ -36,7 +49,7 @@
           <span
             title="标签"
             class="iconfont icon-biaoqian tags"
-            v-if="themeConfig.tag !== false && item.frontmatter.tags && item.frontmatter.tags[0]"
+            v-if="themeConfig.tag !== false && item.frontmatter?.tags && item.frontmatter.tags[0]"
           >
             <RouterLink
               :to="`/tags/?tag=${encodeURIComponent(t)}`"
@@ -58,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useSiteData, useRoute, useRouter } from 'vuepress/client'
 
 const props = withDefaults(defineProps<{
@@ -66,11 +79,13 @@ const props = withDefaults(defineProps<{
   tag?: string
   currentPage?: number
   perPage?: number
+  posts?: any[]
 }>(), {
   category: '',
   tag: '',
   currentPage: 1,
-  perPage: 10
+  perPage: 10,
+  posts: () => []
 })
 
 const site = useSiteData()
@@ -79,12 +94,29 @@ const router = useRouter()
 
 const postListRef = ref<HTMLElement | null>(null)
 
-const themeConfig = computed(() => site.value.themeConfig || {})
+const themeConfig = computed(() => site.value?.themeConfig || {})
 
 const displayPosts = computed(() => {
-  // 需要从实际的页面数据中筛选和分页
-  // 这里返回空数组，需要根据实际数据源来实现
-  return []
+  let filteredPosts = props.posts || []
+
+  // 按分类筛选
+  if (props.category) {
+    filteredPosts = filteredPosts.filter(post => {
+      return post.frontmatter?.categories?.includes(props.category)
+    })
+  }
+
+  // 按标签筛选
+  if (props.tag) {
+    filteredPosts = filteredPosts.filter(post => {
+      return post.frontmatter?.tags?.includes(props.tag)
+    })
+  }
+
+  // 分页
+  const start = (props.currentPage - 1) * props.perPage
+  const end = start + props.perPage
+  return filteredPosts.slice(start, end)
 })
 
 // 监听页码变化
@@ -156,7 +188,7 @@ watch(
         opacity: 0.7;
         margin-top: 0.5rem;
 
-        span {
+        span, a {
           margin-right: 1rem;
 
           &::before {
@@ -166,6 +198,7 @@ watch(
           a {
             color: inherit;
             text-decoration: none;
+            margin-right: 0.5rem;
 
             &:hover {
               color: var(--accentColor);

@@ -3,14 +3,15 @@
     <MainLayout>
       <template #mainLeft>
         <CategoriesBar
-          v-if="categoriesData.length"
-          :categoriesData="categoriesData"
+          v-if="categoriesAndTagsData.categories.length"
+          :categoriesData="categoriesAndTagsData.categories"
           :category="category"
         />
         <PostList
           :currentPage="currentPage"
           :perPage="perPage"
           :category="category"
+          :posts="sortPostsData"
         />
         <Pagination
           :total="total"
@@ -22,8 +23,8 @@
       </template>
       <template #mainRight>
         <CategoriesBar
-          v-if="categoriesData.length"
-          :categoriesData="categoriesData"
+          v-if="categoriesAndTagsData.categories.length"
+          :categoriesData="categoriesAndTagsData.categories"
           :category="category"
         />
       </template>
@@ -34,6 +35,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vuepress/client'
+import { usePosts } from '../composables/usePosts'
 
 import MainLayout from './MainLayout.vue'
 import PostList from './PostList.vue'
@@ -42,14 +44,18 @@ import CategoriesBar from './CategoriesBar.vue'
 
 const route = useRoute()
 
+// 使用文章数据 composable
+const { sortPosts: sortPostsData, groupPosts: groupPostsData, categoriesAndTags: categoriesAndTagsData } = usePosts()
+
 const category = ref('')
-const total = ref(0)
 const perPage = ref(10)
 const currentPage = ref(1)
 
-const categoriesData = computed(() => {
-  // 从页面数据中提取分类
-  return []
+const total = computed(() => {
+  if (category.value && groupPostsData.value.categories[category.value]) {
+    return groupPostsData.value.categories[category.value].length
+  }
+  return sortPostsData.value.length
 })
 
 const handlePagination = (i: number) => {

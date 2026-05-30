@@ -1,111 +1,123 @@
+/**
+ * 自动生成结构化侧边栏
+ */
+
 import fs from 'fs'
 import path from 'path'
 
-interface SidebarItem {
-  text: string
-  link?: string
-  children?: SidebarItem[]
-  collapsible?: boolean
-}
-
 /**
- * 自动生成结构化侧边栏
- * 扫描 docs 目录，根据文件夹结构生成侧边栏配置
+ * 生成侧边栏数据
+ * @param sourceDir docs 目录路径
+ * @param collapsable 是否可折叠
+ * @returns 侧边栏数据
  */
-export function generateSidebar(sourceDir: string): Record<string, SidebarItem[]> {
-  const sidebar: Record<string, SidebarItem[]> = {}
-  const docsDir = path.resolve(sourceDir)
+export function createSidebarData(sourceDir: string, collapsable = true): Record<string, any> {
+  const sidebarData: Record<string, any> = {}
+  const tocs = readTocs(sourceDir)
 
-  // 排除的目录
-  const excludeDirs = ['.vuepress', 'node_modules', '@pages', '_posts']
-
-  // 扫描一级目录
-  const topDirs = fs.readdirSync(docsDir).filter(item => {
-    const fullPath = path.join(docsDir, item)
-    return fs.statSync(fullPath).isDirectory() && !excludeDirs.includes(item)
+  tocs.forEach(toc => {
+    if (toc.endsWith('_posts')) {
+      // 碎片化文章不需要生成结构化侧边栏
+    } else {
+      const sidebarObj = mapTocToSidebar(toc, collapsable)
+      if (sidebarObj.sidebar.length) {
+        sidebarData[`/${path.basename(toc)}/`] = sidebarObj.sidebar
+      }
+    }
   })
 
-  for (const dir of topDirs) {
-    const dirPath = path.join(docsDir, dir)
-    const prefix = `/${dir}/`
-    const items = scanDirectory(dirPath, prefix, docsDir)
-
-    if (items.length) {
-      sidebar[prefix] = items
-    }
-  }
-
-  return sidebar
+  return sidebarData
 }
 
 /**
- * 递归扫描目录
+ * 读取指定目录下的文件夹路径
  */
-function scanDirectory(
-  dirPath: string,
-  prefix: string,
-  docsDir: string
-): SidebarItem[] {
-  const items: SidebarItem[] = []
-
-  if (!fs.existsSync(dirPath)) return items
-
-  const entries = fs.readdirSync(dirPath).sort()
-
-  for (const entry of entries) {
-    const fullPath = path.join(dirPath, entry)
-    const stat = fs.statSync(fullPath)
-
-    if (stat.isDirectory()) {
-      // 子目录 - 递归处理
-      const children = scanDirectory(fullPath, `${prefix}${entry}/`, docsDir)
-      if (children.length) {
-        items.push({
-          text: entry.replace(/^\d+\./, ''), // 去掉序号前缀
-          children,
-          collapsible: true,
-        })
-      }
-    } else if (entry.endsWith('.md') && entry !== 'README.md') {
-      // Markdown 文件
-      const title = getTitleFromMd(fullPath) || entry.replace(/\.md$/, '').replace(/^\d+\./, '')
-      const relativePath = path.relative(docsDir, fullPath)
-      const link = '/' + relativePath.replace(/\.md$/, '.html')
-
-      items.push({
-        text: title,
-        link,
-      })
+function readTocs(root: string): string[] {
+  const result: string[] = []
+  const files = fs.readdirSync(root)
+  files.forEach(name => {
+    const file = path.resolve(root, name)
+    if (fs.statSync(file).isDirectory() && name !== '.vuepress' && name !== '@pages' && name !== 'node_modules') {
+      result.push(file)
     }
-  }
-
-  return items
+  })
+  return result
 }
 
 /**
- * 从 Markdown 文件中提取标题
+ * 将目录映射为侧边栏配置数据
  */
-function getTitleFromMd(filePath: string): string | null {
-  try {
-    const content = fs.readFileSync(filePath, 'utf-8')
+function mapTocToSidebar(root: string, collapsable: boolean, prefix = ''): { sidebar: any[] } {
+  let sidebar: any[] = []
+  const files = fs.readdirSync(root)
 
-    // 检查 frontmatter 中的 title
-    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/)
-    if (frontmatterMatch) {
-      const titleMatch = frontmatterMatch[1].match(/^title:\s*(.+)$/m)
-      if (titleMatch) {
-        return titleMatch[1].trim().replace(/^['"]|['"]$/g, '')
+  files.forEach(filename => {
+    if (filename === '.DS_Store' || filename === 'node_modules') return
+
+    const file = path.resolve(root, filename)
+    const stat = fs.statSync(file)
+
+    const fileNameArr = filename.split('.')
+    const isDir = stat.isDirectory()
+    let order = '', title = '', type = ''
+
+    if (fileNameArr.length === 2) {
+      order = fileNameArr[0]
+      title = fileNameArr[1]
+    } else {
+      const firstDotIndex = filename.indexOf('.')
+      const lastDotIndex = filename.lastIndexOf('.')
+      order = filename.substring(0, firstDotIndex)
+      type = filename.substring(lastDotIndex + 1)
+      if (isDir) {
+        title = filename.substring(firstDotIndex + 1)
+      } else {
+        title = filename.substring(firstDotIndex + 1, lastDotIndex)
       }
     }
 
-    // 检查第一个 # 标题
-    const h1Match = content.match(/^#\s+(.+)$/m)
-    if (h1Match) {
-      return h1Match[1].trim()
+    const orderNum = parseInt(order, 10)
+    if (isNaN(orderNum) || orderNum < 0) return
+
+    if (sidebar[orderNum]) {
+      // 序号重复，会被覆盖
     }
 
-    return null
-  } catch {
-    return null
-  }
+    if (isDir) {
+      sidebar[orderNum] = {
+        title,
+        collapsable,
+        children: mapTocToSidebar(file, collapsable, prefix + filename + '/').sidebar
+      }
+    } else {
+      if (type !== 'md') return
+
+      // 读取 frontmatter 获取 title 和 titleTag
+      let titleFromFrontmatter = title
+      let titleTag = ''
+      try {
+        const content = fs.readFileSync(file, 'utf8')
+        const matterMatch = content.match(/^---\n([\s\S]*?)\n---/)
+        if (matterMatch) {
+          const titleMatch = matterMatch[1].match(/title:\s*(.+)/)
+          if (titleMatch) {
+            titleFromFrontmatter = titleMatch[1].trim().replace(/^['"]|['"]$/g, '')
+          }
+          const titleTagMatch = matterMatch[1].match(/titleTag:\s*(.+)/)
+          if (titleTagMatch) {
+            titleTag = titleTagMatch[1].trim().replace(/^['"]|['"]$/g, '')
+          }
+        }
+      } catch {
+        // 读取失败使用文件名
+      }
+
+      const item: any[] = [prefix + filename, titleFromFrontmatter]
+      if (titleTag) item.push(titleTag)
+      sidebar[orderNum] = item
+    }
+  })
+
+  sidebar = sidebar.filter(item => item !== null && item !== undefined)
+  return { sidebar }
 }

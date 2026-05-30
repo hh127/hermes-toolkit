@@ -3,14 +3,15 @@
     <MainLayout>
       <template #mainLeft>
         <TagsBar
-          v-if="tagsData.length"
-          :tagsData="tagsData"
+          v-if="categoriesAndTagsData.tags.length"
+          :tagsData="categoriesAndTagsData.tags"
           :tag="tag"
         />
         <PostList
           :currentPage="currentPage"
           :perPage="perPage"
           :tag="tag"
+          :posts="sortPostsData"
         />
         <Pagination
           :total="total"
@@ -22,8 +23,8 @@
       </template>
       <template #mainRight>
         <TagsBar
-          v-if="tagsData.length"
-          :tagsData="tagsData"
+          v-if="categoriesAndTagsData.tags.length"
+          :tagsData="categoriesAndTagsData.tags"
           :tag="tag"
         />
       </template>
@@ -34,6 +35,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vuepress/client'
+import { usePosts } from '../composables/usePosts'
 
 import MainLayout from './MainLayout.vue'
 import PostList from './PostList.vue'
@@ -42,14 +44,18 @@ import TagsBar from './TagsBar.vue'
 
 const route = useRoute()
 
+// 使用文章数据 composable
+const { sortPosts: sortPostsData, groupPosts: groupPostsData, categoriesAndTags: categoriesAndTagsData } = usePosts()
+
 const tag = ref('')
-const total = ref(0)
 const perPage = ref(10)
 const currentPage = ref(1)
 
-const tagsData = computed(() => {
-  // 从页面数据中提取标签
-  return []
+const total = computed(() => {
+  if (tag.value && groupPostsData.value.tags[tag.value]) {
+    return groupPostsData.value.tags[tag.value].length
+  }
+  return sortPostsData.value.length
 })
 
 const handlePagination = (i: number) => {

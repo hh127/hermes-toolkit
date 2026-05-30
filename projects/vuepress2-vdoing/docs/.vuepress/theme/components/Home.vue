@@ -68,11 +68,16 @@
           class="card-box"
           v-if="homeData.postList === 'simple'"
           :length="homeData.simplePostListLength || 10"
+          :posts="sortPostsData"
         />
 
         <!-- 详情版文章列表 -->
         <template v-else-if="!homeData.postList || homeData.postList === 'detailed'">
-          <PostList :currentPage="currentPage" :perPage="perPage" />
+          <PostList
+            :currentPage="currentPage"
+            :perPage="perPage"
+            :posts="sortPostsData"
+          />
           <Pagination
             :total="total"
             :perPage="perPage"
@@ -86,13 +91,13 @@
       <template v-if="!homeData.hideRightBar" #mainRight>
         <BloggerBar v-if="themeConfig.blogger" />
         <CategoriesBar
-          v-if="themeConfig.category !== false && categoriesData.length"
-          :categoriesData="categoriesData"
+          v-if="themeConfig.category !== false && categoriesAndTagsData.categories.length"
+          :categoriesData="categoriesAndTagsData.categories"
           :length="10"
         />
         <TagsBar
-          v-if="themeConfig.tag !== false && tagsData.length"
-          :tagsData="tagsData"
+          v-if="themeConfig.tag !== false && categoriesAndTagsData.tags.length"
+          :tagsData="categoriesAndTagsData.tags"
           :length="30"
         />
       </template>
@@ -101,8 +106,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { usePageFrontmatter, useSiteData, useRoute, withBase } from 'vuepress/client'
+import { usePosts } from '../composables/usePosts'
 
 import MainLayout from './MainLayout.vue'
 import PostList from './PostList.vue'
@@ -116,6 +122,9 @@ const frontmatter = usePageFrontmatter()
 const site = useSiteData()
 const route = useRoute()
 
+// 使用文章数据 composable
+const { sortPosts: sortPostsData, categoriesAndTags: categoriesAndTagsData } = usePosts()
+
 const total = ref(0)
 const perPage = ref(10)
 const currentPage = ref(1)
@@ -123,18 +132,6 @@ const currentPage = ref(1)
 const themeConfig = computed(() => site.value?.themeConfig || {})
 const homeData = computed(() => ({ ...frontmatter.value }))
 const hasFeatures = computed(() => !!(homeData.value.features && homeData.value.features.length))
-
-const categoriesData = computed(() => {
-  // 从页面数据中提取分类
-  const categories: any[] = []
-  return categories
-})
-
-const tagsData = computed(() => {
-  // 从页面数据中提取标签
-  const tags: any[] = []
-  return tags
-})
 
 const showBanner = computed(() => {
   return route.query.p && route.query.p != 1 && (!homeData.value.postList || homeData.value.postList === 'detailed')
@@ -168,8 +165,12 @@ const handlePagination = (i: number) => {
   currentPage.value = i
 }
 
+// 更新总数
+watch(sortPostsData, (newPosts) => {
+  total.value = newPosts.length
+}, { immediate: true })
+
 onMounted(() => {
-  total.value = 100 // 需要从实际数据获取
   if (route.query.p) {
     currentPage.value = Number(route.query.p)
   }

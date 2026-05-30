@@ -1,5 +1,6 @@
 import { getDirname, path } from '@vuepress/utils'
 import type { Theme } from 'vuepress/core'
+import { createSidebarData } from './node/sidebar'
 
 const __dirname = getDirname(import.meta.url)
 
@@ -9,9 +10,25 @@ const __dirname = getDirname(import.meta.url)
  */
 export const vdoing2Theme = (options: Record<string, any> = {}): Theme => {
   return (app) => {
-    // 主题配置
-    const themeConfig = {
-      ...options,
+    const themeConfig = { ...options }
+
+    // 自动生成结构化侧边栏
+    const sidebar = themeConfig.sidebar
+    if (sidebar === 'structuring' || (sidebar && sidebar.mode === 'structuring')) {
+      const collapsable = themeConfig.sidebar?.collapsable !== false
+      try {
+        const sidebarData = createSidebarData(app.dir.source(), collapsable)
+        if (Object.keys(sidebarData).length > 0) {
+          themeConfig.sidebar = sidebarData
+          console.log('tip: sidebar data generated successfully')
+        } else {
+          themeConfig.sidebar = 'auto'
+          console.log('warning: no sidebar data generated, switch to "auto"')
+        }
+      } catch (e) {
+        themeConfig.sidebar = 'auto'
+        console.log('warning: failed to generate sidebar data:', e)
+      }
     }
 
     return {
@@ -20,7 +37,6 @@ export const vdoing2Theme = (options: Record<string, any> = {}): Theme => {
       // 主题别名
       alias: {
         '@theme': path.resolve(__dirname),
-        '@AlgoliaSearchBox': path.resolve(__dirname, 'components/AlgoliaSearchBox.vue'),
       },
 
       // 主题布局

@@ -3,7 +3,7 @@
     <MainLayout>
       <template #mainLeft>
         <div class="archives card-box">
-          <div class="year-list">
+          <div class="year-list" v-if="archivesData.length">
             <div
               class="year"
               v-for="(yearItem, index) in archivesData"
@@ -29,18 +29,19 @@
               </div>
             </div>
           </div>
+          <div v-else class="empty">暂无文章</div>
         </div>
       </template>
       <template #mainRight>
         <BloggerBar v-if="themeConfig.blogger" />
         <CategoriesBar
-          v-if="themeConfig.category !== false && categoriesData.length"
-          :categoriesData="categoriesData"
+          v-if="themeConfig.category !== false && categoriesAndTagsData.categories.length"
+          :categoriesData="categoriesAndTagsData.categories"
           :length="10"
         />
         <TagsBar
-          v-if="themeConfig.tag !== false && tagsData.length"
-          :tagsData="tagsData"
+          v-if="themeConfig.tag !== false && categoriesAndTagsData.tags.length"
+          :tagsData="categoriesAndTagsData.tags"
           :length="30"
         />
       </template>
@@ -51,6 +52,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useSiteData } from 'vuepress/client'
+import { usePosts } from '../composables/usePosts'
 
 import MainLayout from './MainLayout.vue'
 import BloggerBar from './BloggerBar.vue'
@@ -60,13 +62,36 @@ import TagsBar from './TagsBar.vue'
 const site = useSiteData()
 const themeConfig = computed(() => site.value?.themeConfig || {})
 
-const categoriesData = computed(() => [])
-const tagsData = computed(() => [])
+// 使用文章数据 composable
+const { sortPosts: sortPostsData, categoriesAndTags: categoriesAndTagsData } = usePosts()
 
+// 按年份分组归档数据
 const archivesData = computed(() => {
-  // 从页面数据中提取归档信息
-  // 需要根据实际的页面数据来生成
-  return []
+  const yearMap: Record<string, any[]> = {}
+
+  sortPostsData.value.forEach(post => {
+    const date = post.frontmatter?.date
+    if (!date) return
+
+    const year = date.split('-')[0]
+    if (!yearMap[year]) {
+      yearMap[year] = []
+    }
+    yearMap[year].push({
+      title: post.title,
+      path: post.path,
+      date: date.split(' ')[0],
+      titleTag: post.frontmatter?.titleTag
+    })
+  })
+
+  // 按年份倒序
+  return Object.keys(yearMap)
+    .sort((a, b) => Number(b) - Number(a))
+    .map(year => ({
+      year,
+      posts: yearMap[year]
+    }))
 })
 </script>
 
@@ -74,6 +99,13 @@ const archivesData = computed(() => {
 .archives-page {
   .archives {
     padding: 1.5rem;
+
+    .empty {
+      text-align: center;
+      color: var(--textColor);
+      opacity: 0.5;
+      padding: 2rem;
+    }
 
     .year-list {
       .year {

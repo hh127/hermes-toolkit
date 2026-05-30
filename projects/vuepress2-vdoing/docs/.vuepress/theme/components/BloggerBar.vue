@@ -42,27 +42,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useSiteData } from 'vuepress/client'
+import { usePosts } from '../composables/usePosts'
 
 const site = useSiteData()
 
-const blogger = computed(() => {
-  return site.value?.themeConfig?.blogger
-})
+const blogger = computed(() => site.value?.themeConfig?.blogger)
 
-const postCount = computed(() => {
-  // 需要从实际数据获取
-  return 0
-})
-
-const categoriesCount = computed(() => {
-  // 需要从实际数据获取
-  return 0
-})
-
-const tagsCount = computed(() => {
-  // 需要从实际数据获取
-  return 0
-})
+// 使用文章数据 composable
+const { postCount, categoriesCount, tagsCount } = usePosts()
 </script>
 
 <style lang="scss">
